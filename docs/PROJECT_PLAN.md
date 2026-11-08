@@ -1,6 +1,6 @@
 # Nissa Clinic — Project Plan
 
-Last updated: Milestones 1–9 are code-complete; Vercel production deployment exists but is not production-accepted until Supabase and OpenAI are configured and live verification passes.
+Last updated: Full milestone audit run (9 November 2026). Lint/typecheck/54 unit tests/production build pass; 14 Supabase migrations are applied to the live project with hardened function grants and RLS. Vercel production deployment exists. Remaining work is owner-configured/live verification (timezone, OpenAI, `CRON_SECRET` in production, Email/WhatsApp providers, staff-session RLS proof, booking concurrency/acceptance), not missing feature code.
 
 ## Status legend
 
@@ -18,18 +18,20 @@ Last updated: Milestones 1–9 are code-complete; Vercel production deployment e
 | 3 | Clinic settings & services | **In progress** | Code complete: doctor-managed settings and services, server validation, audit log, cached public content. Live save/RLS verification needs project keys |
 | 4 | Appointment booking | **In progress** | Public booking code complete: genuine availability check, transactional reservation, patient creation reuse, website source bookings. Live end-to-end booking needs project keys |
 | 5 | Doctor dashboard data | **In progress** | Appointments workspace code complete: live list, date/status filters, confirm/complete/cancel actions. Live action verification needs project keys |
-| 6 | Patient & consultation management | **Completed** | Patient registration, search, private attachments, consultation records, prescriptions and follow-up scheduling implemented. Live database functions verified on the Supabase project; browser flows need the doctor account |
+| 6 | Patient & consultation management | **Mostly complete** | 14 migrations applied; grants hardened; patient/consultation/prescription/attachment browser flows verified on production. DB function verified for consultation+prescription+follow-up. Open: create a follow-up in UI and confirm it appears in `/dashboard/follow-ups`; verify staff cannot read clinical rows with a real staff session (RLS policies restrict consultations/prescriptions to `is_doctor()`) |
 | 7 | AI receptionist | **In progress (code complete)** | Public chat, logging, review inbox and approved knowledge-base management complete. AI booking/handover remain Milestone 8; live provider/DB checks pending |
 | 8 | AI booking & human handover | **In progress (code complete)** | Controlled booking tools, human handover workflow, needs-human/handover/close controls and transcript logging implemented. Live end-to-end verification pending |
 | 9 | Notifications, reminders & feedback workflow | **In progress (code complete)** | In-app reminder worker, private feedback submission and doctor review implemented. Email/WhatsApp delivery remains not connected |
 | 10 | Testing & deployment | **In progress (blocked)** | QA pass on delivered scope complete; full testing needs 3–9 and a live Supabase project |
 
-> The QA pass found that the repository was still at Milestone 2. Milestones
-> 3–9 now exist in code: settings, services, public booking, appointments,
-> follow-ups, patients/consultations/prescriptions/attachments, an AI
-> receptionist and an in-app reminder/feedback workflow. Email and WhatsApp
-> providers remain unconfigured, and no live Supabase or OpenAI acceptance has
-> been performed in this workspace.
+> Audit (9 November 2026): Milestones 1–9 feature code is present; lint,
+> typecheck, 54 tests and production build pass. The live Supabase project has
+> 14 migrations, hardened grants and RLS; doctor sign-in and core browser flows
+> were verified. No new code bugs were found. Remaining items are owner-supplied
+> configuration/live evidence (timezone, OpenAI, production `CRON_SECRET`,
+> Email/WhatsApp delivery, staff-session RLS proof, booking
+> concurrency/acceptance), not missing feature code. Email and WhatsApp remain
+> intentionally unconnected.
 
 ## Milestone 1 — Project Foundation
 

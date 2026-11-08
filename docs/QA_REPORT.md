@@ -7,7 +7,7 @@
 
 ## Executive summary
 
-The repository is **not at Milestone 10**. At the time of the QA pass it contained Milestones 1–2. Since then all milestone code up to notifications and feedback (Milestone 9) has been implemented. It has not been verified against a live Supabase or OpenAI project. The app cannot be described as fully tested, deployed or production-ready.
+The repository has feature code through Milestone 9 and a production deployment, but it is **not production-accepted**. Baseline checks pass (`npm run lint`, `npm run typecheck`, `npm test` — 54/54, `npm run build`), and the live Supabase project has 14 migrations applied with hardened function grants and RLS in place. A 9 November 2026 full milestone audit found **no new code bugs**. The app still cannot be called fully tested/production-ready because several acceptance checks require owner-supplied configuration or live evidence (clinic timezone, OpenAI keys, production `CRON_SECRET` run, Email/WhatsApp delivery, staff-session RLS proof, booking concurrency and final deployment acceptance). Email and WhatsApp remain intentionally unconnected.
 
 Because of that:
 
@@ -25,6 +25,25 @@ Because of that:
   They are listed below.
 
 This report does not claim any missing feature works.
+
+## Full milestone audit (9 November 2026)
+
+Baseline (local, current tree): `npm run lint` pass, `npm run typecheck` pass, `npm test` 54/54 pass, `npm run build` pass (23 routes). Code audit found no new runtime bugs; prior production fixes (action-state separation, `isDateKey` year handling, `connection()` before auth session) remain in place.
+
+Live Supabase project `jtczycwpozkeyjewhqba`: **14 migrations applied** (`20261105000000_initial_schema` through `20261105001300_function_grants_hardening`). Application RPCs are `EXECUTE` for `postgres`/`service_role` only (hardened). RLS policies show public read only for clinic settings/hours/closures/active services; clinic users read operational data; consultations/prescriptions are doctor-only (`is_doctor()`); no direct appointment insert/update policies. `clinic_settings` row exists but `timezone`, address, phone, email and doctor name are `NULL` (owner-supplied). 1 auth user/profile exists (doctor, active). Services/closures/patients/appointments/clinical rows are empty at audit time.
+
+| Milestone | Code | Live evidence | Blockers / open checks |
+| --- | --- | --- | --- |
+| 1 Foundation | Complete | — | None |
+| 2 Supabase & auth | Complete | 14 migrations, doctor sign-in verified | Staff-session RLS proof; any pgTAP/live DB tests owner requires |
+| 3 Settings & services | Complete | Settings save verified in browser | Owner must set timezone/contact details; staff write refusal verified by RLS intent, full staff-session proof open |
+| 4 Booking | Complete | Honest unavailable state when timezone missing | **Blocked:** set `clinic_settings.timezone`, then verify anonymous booking, capacity/overlap, status |
+| 5 Appointments | Complete | Workspace loads; actions code reviewed | Needs live appointments to verify confirm/complete/cancel + audit rows |
+| 6 Patients/consultations | Mostly complete | Patient create, attachment signed link, consultation+prescription verified; duplicate consultation refused (correct) | Create follow-up in UI and confirm it appears in follow-ups; staff cannot read clinical rows (RLS enforces doctor-only; real staff session still open) |
+| 7 AI receptionist | Complete | UI states honest when unconfigured | **Blocked:** `OPENAI_API_KEY`/`OPENAI_MODEL` for live responses and knowledge use |
+| 8 AI booking/handover | Complete | Tools/inbox actions implemented | **Blocked:** OpenAI + timezone/booking context for live tool-use booking and handover round trip |
+| 9 Feedback/reminders | Complete | Anonymous feedback stored live (verified earlier) | `CRON_SECRET` in production + live cron run; Email/WhatsApp intentionally unconnected |
+| 10 QA/security/deploy | Partial | Baseline checks pass, deployment exists, security hardening present | Owner-configured live acceptance, booking concurrency, deployment protection/production acceptance |
 
 ## Milestone 6 verification update (8 November 2026)
 
