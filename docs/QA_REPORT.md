@@ -40,8 +40,12 @@ This report does not claim any missing feature works.
   rolled-back live transaction: a patient with a valid `NIS-####` reference, a
   consultation, a prescription and a follow-up were all created, then the
   transaction was rolled back. No test data remains in the database.
-- Browser-level patient, attachment and consultation flows still require a real
-  doctor account plus the Supabase environment variables on the deployment.
+- The Vercel production deployment now has the Supabase URL, publishable key and
+  encrypted secret key. A doctor account was created and activated, and a
+  password sign-in was verified against Supabase Auth.
+- Still outstanding: the clinic timezone must be set in `/dashboard/settings`
+  before online booking can compute a real clinic date/time. Browser sign-out,
+  attachment uploads and live booking round trips still need a manual pass.
 
 ## 1. Functional test matrix
 

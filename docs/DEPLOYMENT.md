@@ -13,10 +13,11 @@ PowerShell unless stated otherwise.
 - Git: connected to `madihafaraz77/AI-Receptionist`, production branch `master`
 - Protection: currently enabled by Vercel Deployment Protection
 - Supabase URL and publishable key: configured for Production
-- Supabase secret key: **not configured** (server-side writes such as booking, patients, consultations and settings cannot run yet)
+- Supabase secret key: configured for Production as an encrypted environment variable (8 November 2026)
+- Doctor account: created and activated; credentials are shared privately and must be changed after first sign-in
+- Clinic timezone: **still not set** (booking and reminders need it)
 - OpenAI environment: not configured
 - Database: all 13 migrations applied to the live Supabase project
-- Doctor account: none created yet
 - Cron: daily at 08:30 UTC because the Vercel Hobby plan does not allow more frequent crons
 
 ## 0. What can be deployed today
@@ -350,9 +351,9 @@ When Milestone 7–8 is built:
 
 ## 10. Launch checklist
 
-- [ ] Supabase project created and keys stored safely.
+- [x] Supabase project created and keys stored safely.
 - [ ] Public sign-up disabled.
-- [ ] All migrations (currently thirteen) applied without errors.
+- [x] All migrations (currently thirteen) applied without errors.
 - [ ] Clinic timezone configured in `/dashboard/settings` (required for booking, reporting and reminders).
 - [ ] Public booking smoke-tested (availability and booking round trip).
 - [ ] Follow-up complete/cancel actions smoke-tested, including audit rows.
@@ -363,14 +364,14 @@ When Milestone 7–8 is built:
 - [ ] Feedback submitted as an anonymous visitor, then reviewed/archived as the doctor; response stays private.
 - [ ] Emergency/human-request handover flags appear in `/dashboard/ai-receptionist`; assignment and close actions are verified.
 - [ ] AI conversations appear in `/dashboard/ai-receptionist`; inbox is read-only.
-- [ ] Doctor account created, `role = 'doctor'`, `is_active = true`.
+- [x] Doctor account created, `role = 'doctor'`, `is_active = true`.
 - [ ] Staff accounts activated deliberately.
 - [ ] RLS verified as anonymous, inactive, staff and doctor.
 - [ ] Private storage bucket verified.
-- [ ] GitHub repository created (private) and `.env.local` not committed.
-- [ ] Vercel environment variables set for all environments.
-- [ ] Production deployment succeeds.
-- [ ] Public routes return 200 and unknown routes return 404.
+- [x] GitHub repository created and `.env.local` not committed.
+- [x] Vercel Production environment variables set.
+- [x] Production deployment succeeds.
+- [x] Public routes return 200 and unknown routes return 404.
 - [ ] Sign-in, sign-out and dashboard protection verified live.
 - [ ] Security headers observed on the live response.
 - [ ] No feature is described as working before it is connected and tested.
