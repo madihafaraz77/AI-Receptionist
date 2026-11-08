@@ -47,6 +47,51 @@ This report does not claim any missing feature works.
   before online booking can compute a real clinic date/time. Browser sign-out,
   attachment uploads and live booking round trips still need a manual pass.
 
+## Live browser test and fixes (8 November 2026)
+
+The first real-browser pass (Microsoft Edge, driven by `playwright-core`) on the
+production site found three genuine defects that the build, lint and unit tests
+did **not** catch:
+
+1. **Every `useActionState` form returned HTTP 500.** Next.js forbids a
+   `"use server"` module from exporting anything other than async functions, and
+   each action file also exported its `initial…State` object. Submitting the
+   patient form crashed with `A "use server" file can only export async
+   functions, found object`, which surfaced to the user as
+   "A server error occurred". This affected the forms in patients, consultations,
+   services, settings, appointments, follow-ups, dashboard feedback, the AI
+   inbox, knowledge and public booking.
+   Fix: each folder now has an `action-state.ts` module that owns the state type
+   and its initial value; `actions.ts` files import the type and export only
+   async functions.
+2. **Three date validators rejected every valid date.** `isDateKey` destructured
+   `[, year, month, day]` from a three-element `value.split("-")`, so the year
+   was dropped and every date failed. Only the validators that destructured a
+   regex match were correct. Fix: `[year, month, day]` in `patients/actions.ts`,
+   `consultations/actions.ts` and `(public)/ai-receptionist/actions.ts`.
+3. **`Date.now()` was read while prerendering the dashboard.** Supabase Auth
+   checks the clock while validating the session, which Cache Components flagged
+   on every dashboard request. Fix: `requireClinicUser()` awaits
+   `connection()` before reading the session.
+
+Verified in a real browser against `https://nissa-ai-receptionist.vercel.app`:
+
+| Flow | Result |
+| --- | --- |
+| Password sign-in, redirect to `/dashboard` | Pass |
+| All ten dashboard pages render with a doctor session | Pass |
+| Create patient, `NIS-####` reference issued, row listed | Pass |
+| Upload PNG to the private `patient-attachments` bucket, signed link works | Pass |
+| Create consultation against a confirmed appointment (with prescription) | Pass |
+| Duplicate consultation for the same appointment is refused, not crashed | Pass |
+| Save clinic settings | Pass |
+| Anonymous public feedback submission | Pass |
+
+All test patients, appointments, consultations, prescriptions, attachments,
+feedback, audit rows and stored files were deleted afterwards; the live database
+and storage bucket are empty again. The clinic timezone is still unset, so public
+booking and consultation booking still cannot compute a clinic date/time.
+
 ## 1. Functional test matrix
 
 Status meanings:

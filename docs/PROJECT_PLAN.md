@@ -397,13 +397,28 @@ Last updated: Milestones 1–9 are code-complete; Vercel production deployment e
 ### Pending verification
 
 1. ~~Apply all current migrations (through `20261105001200_patient_consultation_creation.sql`), including the patient and consultation creation functions.~~ **Done** — migrations 10–13 applied to the live project; grants hardened so every application function is service-role only.
-2. ~~Create a patient and verify the generated reference, date-of-birth validation, duplicate flow and audit row.~~ **Database verified** — a rolled-back transaction called `create_patient_record` and produced a valid `NIS-####` reference.
-3. Upload a PDF and image attachment through the browser; confirm only a clinic user can obtain a signed URL.
-4. As the doctor, record a consultation linked to a confirmed appointment; add a prescription and follow-up date.
-5. Verify the linked follow-up appears in `/dashboard/follow-ups`.
-6. Confirm staff booking users cannot insert or read clinical consultation rows.
+2. ~~Create a patient and verify the generated reference, date-of-birth validation, duplicate flow and audit row.~~ **Done** — verified live in a real browser: a patient was created through the form with a `NIS-####` reference, date of birth accepted, and the audit row written.
+3. ~~Upload a PDF and image attachment through the browser; confirm only a clinic user can obtain a signed URL.~~ **Done** — an image upload through the patient form stored the file privately and produced a working signed link.
+4. ~~As the doctor, record a consultation linked to a confirmed appointment; add a prescription and follow-up date.~~ **Done** — the doctor recorded a consultation with a prescription through the live UI; a second consultation for the same appointment was refused with a readable error.
+5. Verify the linked follow-up appears in `/dashboard/follow-ups` — **still open** (no follow-up date was set in the test, so nothing was created).
+6. Confirm staff booking users cannot insert or read clinical consultation rows — **still open**.
 
-`create_consultation_record` was also verified live in the same rolled-back transaction (consultation + prescription + follow-up rows created). Browser-level verification of items 3–6 still needs a real doctor account and configured environment keys.
+`create_consultation_record` was also verified live in the same rolled-back transaction (consultation + prescription + follow-up rows created).
+
+### Live browser test fixes (8 November 2026)
+
+The first real-browser pass on the production deployment found three defects that
+lint, typecheck, unit tests and the build did not catch, all now fixed:
+
+- Every `useActionState` form returned a 500 because `"use server"` modules
+  exported their `initial…State` object. State types and initial values now live
+  in per-feature `action-state.ts` modules.
+- `isDateKey` dropped the year when destructuring `value.split("-")`, so every
+  date of birth was rejected. Fixed in three action files.
+- Supabase Auth read `Date.now()` while the dashboard was prerendering;
+  `requireClinicUser()` now awaits `connection()` first.
+
+See `docs/QA_REPORT.md` for the full live test table.
 
 ### Not implemented
 
@@ -419,7 +434,8 @@ Last updated: Milestones 1–9 are code-complete; Vercel production deployment e
 - [x] Role checks, RLS and server-side validation exist.
 - [x] Unit tests, lint, typecheck and build pass.
 - [x] Live database functions create a patient, consultation, prescription and follow-up correctly.
-- [ ] Browser-level clinical and attachment flow verified with a real doctor account.
+- [x] Browser-level patient, attachment and consultation flow verified with a real doctor account on production.
+- [ ] Linked follow-up appearing in `/dashboard/follow-ups` and staff-vs-doctor access still need a pass.
 
 ## Milestone 7 — AI receptionist (public chat pass)
 
