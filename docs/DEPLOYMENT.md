@@ -4,17 +4,19 @@ This guide explains how to put the app online safely and how to configure the
 services it will use. It is written for a beginner and assumes Windows
 PowerShell unless stated otherwise.
 
-> **Important:** a Vercel production deployment now exists for the code in this workspace, but it is **not production-accepted** yet. No Supabase or OpenAI environment variables have been configured in the host, and the app remains behind Vercel Deployment Protection.
-> Do not describe it as live until every step has been completed and the live
-> URLs have been checked.
+> **Important:** a Vercel production deployment now exists for the code in this workspace, but it is **not production-accepted** yet. The Supabase project URL and publishable key are configured in Vercel, but the server-side Supabase secret key, OpenAI key and clinic timezone are still missing. Do not describe it as live until every step has been completed and the live URLs have been checked.
 
 ### Current deployment
 
 - Project: `nissa-ai-receptionist`
 - Alias: `https://nissa-ai-receptionist.vercel.app`
+- Git: connected to `madihafaraz77/AI-Receptionist`, production branch `master`
 - Protection: currently enabled by Vercel Deployment Protection
-- Supabase environment: not configured in Vercel
-- OpenAI environment: not configured in Vercel
+- Supabase URL and publishable key: configured for Production
+- Supabase secret key: **not configured** (server-side writes such as booking, patients, consultations and settings cannot run yet)
+- OpenAI environment: not configured
+- Database: all 13 migrations applied to the live Supabase project
+- Doctor account: none created yet
 - Cron: daily at 08:30 UTC because the Vercel Hobby plan does not allow more frequent crons
 
 ## 0. What can be deployed today
@@ -145,6 +147,7 @@ Apply every file in `supabase/migrations/` in filename order:
 | `20261105001000_ai_conversation_logging.sql` | Milestone 7 AI conversation and message logging |
 | `20261105001100_ai_handover_actions.sql` | Milestone 8 tool-call logging, human handover and status actions |
 | `20261105001200_patient_consultation_creation.sql` | Milestone 6 patient and consultation creation transactions |
+| `20261105001300_function_grants_hardening.sql` | Revokes default `anon`/`authenticated` EXECUTE grants; application functions become service-role only, RLS helpers stay callable by signed-in users |
 
 **Option A — Supabase CLI (recommended):**
 
