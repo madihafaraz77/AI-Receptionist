@@ -7,12 +7,7 @@ import { writeAuditEvent } from "@/lib/audit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 
-export type PatientActionState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-};
-
-export const initialPatientActionState: PatientActionState = { status: "idle" };
+import type { PatientActionState } from "./action-state";
 
 const GENERIC_ERROR =
   "The patient could not be saved. Please try again or check the server logs.";
@@ -46,7 +41,7 @@ function normalizePhone(phone: string): string {
 
 function isDateKey(value: string): boolean {
   if (!DATE_PATTERN.test(value)) return false;
-  const [, year, month, day] = value.split("-").map(Number);
+  const [year, month, day] = value.split("-").map(Number);
   const date = new Date(Date.UTC(year, month - 1, day));
 
   return (

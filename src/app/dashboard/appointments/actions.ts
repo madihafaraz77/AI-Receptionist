@@ -3,22 +3,11 @@
 import { revalidatePath } from "next/cache";
 
 import { getCurrentUser } from "@/lib/auth/session";
-import {
-  parseAppointmentActionForm,
-  type FieldErrors,
-} from "@/lib/dashboard/validation";
+import { parseAppointmentActionForm } from "@/lib/dashboard/validation";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 
-export type AppointmentActionState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-  errors?: FieldErrors;
-};
-
-export const initialAppointmentActionState: AppointmentActionState = {
-  status: "idle",
-};
+import type { AppointmentActionState } from "./action-state";
 
 const GENERIC_ERROR =
   "The appointment could not be updated. Please try again or check the server logs.";

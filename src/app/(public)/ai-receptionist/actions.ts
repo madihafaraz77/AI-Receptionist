@@ -63,7 +63,7 @@ function isUuid(value: string): boolean {
 
 function isDateKey(value: string): boolean {
   if (!DATE_PATTERN.test(value)) return false;
-  const [, year, month, day] = value.split("-").map(Number);
+  const [year, month, day] = value.split("-").map(Number);
   const date = new Date(Date.UTC(year, month - 1, day));
 
   return (

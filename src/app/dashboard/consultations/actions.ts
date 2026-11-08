@@ -6,14 +6,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 
-export type ConsultationActionState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-};
-
-export const initialConsultationActionState: ConsultationActionState = {
-  status: "idle",
-};
+import type { ConsultationActionState } from "./action-state";
 
 const GENERIC_ERROR =
   "The consultation could not be saved. Please try again or check the server logs.";
@@ -33,7 +26,7 @@ function readOptionalText(formData: FormData, key: string): string | null {
 
 function isDateKey(value: string): boolean {
   if (!DATE_PATTERN.test(value)) return false;
-  const [, year, month, day] = value.split("-").map(Number);
+  const [year, month, day] = value.split("-").map(Number);
   const date = new Date(Date.UTC(year, month - 1, day));
 
   return (

@@ -6,10 +6,8 @@ import { AlertCircle, CheckCircle2, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import {
-  initialAppointmentActionState,
-  setAppointmentStatusAction,
-} from "@/app/dashboard/appointments/actions";
+import { setAppointmentStatusAction } from "@/app/dashboard/appointments/actions";
+import { initialAppointmentActionState } from "@/app/dashboard/appointments/action-state";
 
 export function AppointmentStatusControls({
   appointmentId,

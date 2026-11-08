@@ -6,10 +6,8 @@ import { AlertCircle, CheckCircle2, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import {
-  initialFollowUpActionState,
-  setFollowUpStatusAction,
-} from "@/app/dashboard/follow-ups/actions";
+import { setFollowUpStatusAction } from "@/app/dashboard/follow-ups/actions";
+import { initialFollowUpActionState } from "@/app/dashboard/follow-ups/action-state";
 
 export function FollowUpStatusControls({
   followUpId,

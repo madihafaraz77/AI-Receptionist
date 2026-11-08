@@ -1,6 +1,7 @@
 import "server-only";
 
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { SessionUser } from "@/lib/auth/types";
@@ -58,6 +59,10 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
  * the session is missing or no longer valid.
  */
 export async function requireClinicUser(): Promise<SessionUser> {
+  // Supabase Auth reads the clock while validating the session, so prerendering
+  // must stop here and continue at request time.
+  await connection();
+
   const user = await getCurrentUser();
 
   if (!user) {

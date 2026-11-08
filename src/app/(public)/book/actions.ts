@@ -5,49 +5,13 @@ import { revalidatePath } from "next/cache";
 import {
   parseBookingDetailsForm,
   parseSlotRequestForm,
-  type FieldErrors,
 } from "@/lib/booking/validation";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 import { rateLimitPublicAction } from "@/lib/security/rate-limit";
 import { formatClinicTime } from "@/config/clinic";
 
-export type Slot = {
-  /** 24-hour time, safe to post back as "startTime". */
-  time: string;
-  /** Display label in clinic-friendly 12-hour format. */
-  label: string;
-};
-
-export type SlotState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-  errors?: FieldErrors;
-  slots?: Slot[];
-  /** The exact selection that produced these slots. */
-  selection?: {
-    serviceId: string;
-    appointmentDate: string;
-  };
-};
-
-export const initialSlotState: SlotState = { status: "idle" };
-
-export type BookingState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-  errors?: FieldErrors;
-  appointment?: {
-    reference: string;
-    status: "confirmed" | "pending";
-    appointmentDate: string;
-    startTime: string;
-    mode: "in_person" | "online";
-    feePkr: number;
-  };
-};
-
-export const initialBookingState: BookingState = { status: "idle" };
+import type { BookingState, SlotState } from "./action-state";
 
 const GENERIC_ERROR =
   "The appointment could not be created. Please try again, or contact the clinic if the problem continues.";

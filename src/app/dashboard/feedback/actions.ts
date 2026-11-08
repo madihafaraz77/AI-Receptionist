@@ -6,14 +6,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { writeAuditEvent } from "@/lib/audit";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export type FeedbackActionState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-};
-
-export const initialFeedbackActionState: FeedbackActionState = {
-  status: "idle",
-};
+import type { FeedbackActionState } from "./action-state";
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

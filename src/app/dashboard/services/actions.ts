@@ -5,16 +5,10 @@ import { revalidatePath, updateTag } from "next/cache";
 import { getCurrentUser } from "@/lib/auth/session";
 import { writeAuditEvent } from "@/lib/audit";
 import { CLINIC_CONTENT_TAG } from "@/lib/clinic/data";
-import { parseServiceForm, type FieldErrors } from "@/lib/clinic/validation";
+import { parseServiceForm } from "@/lib/clinic/validation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export type ServiceActionState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-  errors?: FieldErrors;
-};
-
-export const initialServiceState: ServiceActionState = { status: "idle" };
+import type { ServiceActionState } from "./action-state";
 
 const GENERIC_ERROR =
   "The service could not be saved. Please try again, or check the server logs if the problem continues.";

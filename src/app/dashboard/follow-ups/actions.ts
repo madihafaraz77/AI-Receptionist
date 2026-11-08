@@ -3,22 +3,11 @@
 import { revalidatePath } from "next/cache";
 
 import { getCurrentUser } from "@/lib/auth/session";
-import {
-  parseFollowUpActionForm,
-  type FieldErrors,
-} from "@/lib/dashboard/validation";
+import { parseFollowUpActionForm } from "@/lib/dashboard/validation";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 
-export type FollowUpActionState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-  errors?: FieldErrors;
-};
-
-export const initialFollowUpActionState: FollowUpActionState = {
-  status: "idle",
-};
+import type { FollowUpActionState } from "./action-state";
 
 const GENERIC_ERROR =
   "The follow-up could not be updated. Please try again or check the server logs.";

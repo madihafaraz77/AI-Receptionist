@@ -6,10 +6,8 @@ import { AlertCircle, CheckCircle2, LoaderCircle, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
-import {
-  uploadPatientAttachmentAction,
-  initialPatientActionState,
-} from "./actions";
+import { uploadPatientAttachmentAction } from "./actions";
+import { initialPatientActionState } from "./action-state";
 
 export function AttachmentForm({ patientId }: { patientId: string }) {
   const [state, formAction, isPending] = useActionState(

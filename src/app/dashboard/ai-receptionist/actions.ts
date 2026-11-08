@@ -3,22 +3,11 @@
 import { revalidatePath } from "next/cache";
 
 import { getCurrentUser } from "@/lib/auth/session";
-import {
-  parseAiConversationActionForm,
-  type FieldErrors,
-} from "@/lib/ai/inbox-validation";
+import { parseAiConversationActionForm } from "@/lib/ai/inbox-validation";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 
-export type AiConversationActionState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-  errors?: FieldErrors;
-};
-
-export const initialAiConversationActionState: AiConversationActionState = {
-  status: "idle",
-};
+import type { AiConversationActionState } from "./action-state";
 
 const GENERIC_ERROR =
   "The conversation could not be updated. Please try again or check the server logs.";

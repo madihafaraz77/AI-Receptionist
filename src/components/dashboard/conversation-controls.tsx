@@ -5,10 +5,8 @@ import { AlertCircle, CheckCircle2, LoaderCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-import {
-  initialAiConversationActionState,
-  setAiConversationStatusAction,
-} from "@/app/dashboard/ai-receptionist/actions";
+import { setAiConversationStatusAction } from "@/app/dashboard/ai-receptionist/actions";
+import { initialAiConversationActionState } from "@/app/dashboard/ai-receptionist/action-state";
 
 export function ConversationControls({
   conversationId,

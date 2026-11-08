@@ -9,10 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { ConsultationEligibleAppointment } from "@/lib/consultations/types";
 
-import {
-  createConsultationAction,
-  initialConsultationActionState,
-} from "./actions";
+import { createConsultationAction } from "./actions";
+import { initialConsultationActionState } from "./action-state";
 
 const selectClassName =
   "h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";

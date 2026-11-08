@@ -5,14 +5,7 @@ import { getSupabaseConfig } from "@/lib/supabase/config";
 import { writeAuditEvent } from "@/lib/audit";
 import { rateLimitPublicAction } from "@/lib/security/rate-limit";
 
-export type FeedbackSubmissionState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-};
-
-export const initialFeedbackSubmissionState: FeedbackSubmissionState = {
-  status: "idle",
-};
+import type { FeedbackSubmissionState } from "./action-state";
 
 export async function submitFeedbackAction(
   _previousState: FeedbackSubmissionState,

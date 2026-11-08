@@ -4,21 +4,10 @@ import { revalidatePath } from "next/cache";
 
 import { getCurrentUser } from "@/lib/auth/session";
 import { writeAuditEvent } from "@/lib/audit";
-import {
-  parseKnowledgeEntryForm,
-  type FieldErrors,
-} from "@/lib/ai/knowledge-validation";
+import { parseKnowledgeEntryForm } from "@/lib/ai/knowledge-validation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export type KnowledgeActionState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-  errors?: FieldErrors;
-};
-
-export const initialKnowledgeActionState: KnowledgeActionState = {
-  status: "idle",
-};
+import type { KnowledgeActionState } from "./action-state";
 
 const GENERIC_ERROR =
   "The approved knowledge entry could not be saved. Please try again or check the server logs.";

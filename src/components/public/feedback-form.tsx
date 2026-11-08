@@ -13,10 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
-import {
-  initialFeedbackSubmissionState,
-  submitFeedbackAction,
-} from "@/app/(public)/feedback/actions";
+import { submitFeedbackAction } from "@/app/(public)/feedback/actions";
+import { initialFeedbackSubmissionState } from "@/app/(public)/feedback/action-state";
 
 export function FeedbackForm() {
   const [state, formAction, isPending] = useActionState(

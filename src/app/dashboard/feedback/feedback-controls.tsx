@@ -6,10 +6,8 @@ import { AlertCircle, CheckCircle2, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import {
-  initialFeedbackActionState,
-  setFeedbackStatusAction,
-} from "./actions";
+import { setFeedbackStatusAction } from "./actions";
+import { initialFeedbackActionState } from "./action-state";
 
 export function FeedbackControls({
   id,

@@ -5,19 +5,10 @@ import { revalidatePath, updateTag } from "next/cache";
 import { getCurrentUser } from "@/lib/auth/session";
 import { writeAuditEvent } from "@/lib/audit";
 import { CLINIC_CONTENT_TAG } from "@/lib/clinic/data";
-import {
-  parseClinicSettingsForm,
-  type FieldErrors,
-} from "@/lib/clinic/validation";
+import { parseClinicSettingsForm } from "@/lib/clinic/validation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export type SettingsActionState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-  errors?: FieldErrors;
-};
-
-export const initialSettingsState: SettingsActionState = { status: "idle" };
+import type { SettingsActionState } from "./action-state";
 
 const GENERIC_ERROR =
   "The settings could not be saved. Please try again, or check the server logs if the problem continues.";
