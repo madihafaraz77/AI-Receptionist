@@ -36,14 +36,14 @@ Live Supabase project `jtczycwpozkeyjewhqba`: **14 migrations applied** (`202611
 | --- | --- | --- | --- |
 | 1 Foundation | Complete | — | None |
 | 2 Supabase & auth | Complete | 14 migrations, doctor sign-in verified | Staff-session RLS proof; any pgTAP/live DB tests owner requires |
-| 3 Settings & services | Complete | Settings save verified in browser | Owner must set timezone/contact details; staff write refusal verified by RLS intent, full staff-session proof open |
-| 4 Booking | Complete | Honest unavailable state when timezone missing | **Blocked:** set `clinic_settings.timezone`, then verify anonymous booking, capacity/overlap, status |
+| 3 Settings & services | Complete | Timezone set to `Asia/Karachi` via DB + dashboard save (public cache revalidated) | Contact/name fields owner-supplied; staff-session RLS proof open |
+| 4 Booking | Complete | Timezone configured; DB availability/reservation functions in place | Live anonymous booking and capacity/overlap/status acceptance still need a real pass |
 | 5 Appointments | Complete | Workspace loads; actions code reviewed | Needs live appointments to verify confirm/complete/cancel + audit rows |
-| 6 Patients/consultations | Mostly complete | Patient create, attachment signed link, consultation+prescription verified; duplicate consultation refused (correct) | Create follow-up in UI and confirm it appears in follow-ups; staff cannot read clinical rows (RLS enforces doctor-only; real staff session still open) |
+| 6 Patients/consultations | Mostly complete | Patient create, attachment signed link, consultation+prescription verified. **9 Nov 2026 UI check:** consultation with follow-up date saved via UI; `/dashboard/follow-ups` showed OPEN FOLLOW-UPS 1; test data cleaned up. Duplicate consultation refusal correct. | Staff cannot read clinical rows (RLS enforces `is_doctor()` on consultations/prescriptions; real staff session still open) |
 | 7 AI receptionist | Complete | UI states honest when unconfigured | **Blocked:** `OPENAI_API_KEY`/`OPENAI_MODEL` for live responses and knowledge use |
 | 8 AI booking/handover | Complete | Tools/inbox actions implemented | **Blocked:** OpenAI + timezone/booking context for live tool-use booking and handover round trip |
-| 9 Feedback/reminders | Complete | Anonymous feedback stored live (verified earlier) | `CRON_SECRET` in production + live cron run; Email/WhatsApp intentionally unconnected |
-| 10 QA/security/deploy | Partial | Baseline checks pass, deployment exists, security hardening present | Owner-configured live acceptance, booking concurrency, deployment protection/production acceptance |
+| 9 Feedback/reminders | Complete | Anonymous feedback stored live (verified earlier) | Set `CRON_SECRET` in production + run `/api/cron/remind` (`Authorization: Bearer <CRON_SECRET>`); a local `CRON_SECRET` was added to `.env.local` (gitignored) for verification. Email/WhatsApp intentionally unconnected. |
+| 10 QA/security/deploy | Partial | Baseline checks pass, 14 migrations live, timezone set, follow-up UI verified, deployment exists | Owner-configured live acceptance (OpenAI, prod cron run, providers), staff RLS proof, booking concurrency, deployment protection/production acceptance |
 
 ## Milestone 6 verification update (8 November 2026)
 

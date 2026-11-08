@@ -1,6 +1,6 @@
 # Nissa Clinic — Project Plan
 
-Last updated: Full milestone audit run (9 November 2026). Lint/typecheck/54 unit tests/production build pass; 14 Supabase migrations are applied to the live project with hardened function grants and RLS. Vercel production deployment exists. Remaining work is owner-configured/live verification (timezone, OpenAI, `CRON_SECRET` in production, Email/WhatsApp providers, staff-session RLS proof, booking concurrency/acceptance), not missing feature code.
+Last updated: Full milestone audit (9 November 2026) plus live setup/verification pass. Lint/typecheck/54 unit tests/production build pass; 14 Supabase migrations applied with hardened grants and RLS. Clinic timezone set to `Asia/Karachi` (DB + dashboard save, public cache revalidated). Live follow-up UI check passed on production and test data cleaned up. Remaining: OpenAI keys, production `CRON_SECRET` + live cron run, Email/WhatsApp (intentionally unconnected), staff-session RLS proof, booking concurrency/acceptance.
 
 ## Status legend
 
@@ -15,10 +15,10 @@ Last updated: Full milestone audit run (9 November 2026). Lint/typecheck/54 unit
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Completed** | Next.js shell, design system, public site, dashboard shell, docs |
 | 2 | Supabase & authentication | **In progress** | Code, migrations, RLS and auth complete; live verification needs project keys |
-| 3 | Clinic settings & services | **In progress** | Code complete: doctor-managed settings and services, server validation, audit log, cached public content. Live save/RLS verification needs project keys |
-| 4 | Appointment booking | **In progress** | Public booking code complete: genuine availability check, transactional reservation, patient creation reuse, website source bookings. Live end-to-end booking needs project keys |
-| 5 | Doctor dashboard data | **In progress** | Appointments workspace code complete: live list, date/status filters, confirm/complete/cancel actions. Live action verification needs project keys |
-| 6 | Patient & consultation management | **Mostly complete** | 14 migrations applied; grants hardened; patient/consultation/prescription/attachment browser flows verified on production. DB function verified for consultation+prescription+follow-up. Open: create a follow-up in UI and confirm it appears in `/dashboard/follow-ups`; verify staff cannot read clinical rows with a real staff session (RLS policies restrict consultations/prescriptions to `is_doctor()`) |
+| 3 | Clinic settings & services | **Code complete** | Doctor-managed settings/services, validation, audit, cached public content. Timezone set to `Asia/Karachi` and saved via dashboard (public cache revalidated). Contact/name fields remain owner-supplied; staff-session RLS proof open. |
+| 4 | Appointment booking | **Code complete** | Genuine DB availability, transactional reservation, capacity/overlap enforcement. Timezone is configured (`Asia/Karachi`); live anonymous booking and capacity-concurrency acceptance still need a real pass. |
+| 5 | Doctor dashboard data | **Code complete** | Live list, date/status filters, transactional confirm/complete/cancel actions with audit. Live action round-trip/audit evidence needs real appointments. |
+| 6 | Patient & consultation management | **Mostly complete** | 14 migrations applied; grants hardened; patient/attachment/consultation/prescription verified in production. **Follow-up UI verified 9 Nov 2026:** consultation created via UI with follow-up date; `/dashboard/follow-ups` showed the follow-up (OPEN FOLLOW-UPS 1); test data cleaned up. Open: verify staff cannot read clinical rows with a real staff session (RLS restricts consultations/prescriptions to `is_doctor()`). |
 | 7 | AI receptionist | **In progress (code complete)** | Public chat, logging, review inbox and approved knowledge-base management complete. AI booking/handover remain Milestone 8; live provider/DB checks pending |
 | 8 | AI booking & human handover | **In progress (code complete)** | Controlled booking tools, human handover workflow, needs-human/handover/close controls and transcript logging implemented. Live end-to-end verification pending |
 | 9 | Notifications, reminders & feedback workflow | **In progress (code complete)** | In-app reminder worker, private feedback submission and doctor review implemented. Email/WhatsApp delivery remains not connected |
@@ -289,7 +289,7 @@ Last updated: Full milestone audit run (9 November 2026). Lint/typecheck/54 unit
 ### Pending verification (requires the owner's Supabase project)
 
 1. Apply all current migrations (through `20261105001200_patient_consultation_creation.sql`), including the Milestone 4 public-booking, Milestone 5 appointment-status, Milestone 6 follow-up-status, Milestone 7 AI-logging and AI-message functions.
-2. Set `clinic_settings.timezone` (for example `Asia/Karachi`).
+2. ~~Set `clinic_settings.timezone` (for example `Asia/Karachi`).~~ **Done (9 Nov 2026)** — set to `Asia/Karachi` in the live DB and saved via dashboard (public cache revalidated).
 3. Connect the secret key and confirm `/book` shows genuine openings.
 4. Verify availability excludes past times, closed days, an existing pending or
    confirmed appointment, an overlapping slot and a full date.
@@ -402,7 +402,7 @@ Last updated: Full milestone audit run (9 November 2026). Lint/typecheck/54 unit
 2. ~~Create a patient and verify the generated reference, date-of-birth validation, duplicate flow and audit row.~~ **Done** — verified live in a real browser: a patient was created through the form with a `NIS-####` reference, date of birth accepted, and the audit row written.
 3. ~~Upload a PDF and image attachment through the browser; confirm only a clinic user can obtain a signed URL.~~ **Done** — an image upload through the patient form stored the file privately and produced a working signed link.
 4. ~~As the doctor, record a consultation linked to a confirmed appointment; add a prescription and follow-up date.~~ **Done** — the doctor recorded a consultation with a prescription through the live UI; a second consultation for the same appointment was refused with a readable error.
-5. Verify the linked follow-up appears in `/dashboard/follow-ups` — **still open** (no follow-up date was set in the test, so nothing was created).
+5. ~~Verify the linked follow-up appears in `/dashboard/follow-ups`.~~ **Done (9 Nov 2026)** — a consultation was recorded via the live UI with a follow-up date; `/dashboard/follow-ups` showed OPEN FOLLOW-UPS 1. Test data was cleaned up.
 6. Confirm staff booking users cannot insert or read clinical consultation rows — **still open**.
 
 `create_consultation_record` was also verified live in the same rolled-back transaction (consultation + prescription + follow-up rows created).
